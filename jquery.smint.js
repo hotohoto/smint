@@ -1,14 +1,15 @@
 (function(){
+	var defaultOption = {
+		'scrollSpeed': 500,
+		'mySelector': 'div'
+	}
 	$.fn.smint = function( options ) {
-		var settings = $.extend({
-			'scrollSpeed': 500,
-			'mySelector': 'div'
-		}, options);
+		var settings = $.extend(defaultOption, options)
 
 		var menuItems = []
 		var _smint = $(this)
 		var menuHeight = _smint.height()
-		_smint.addClass('smint');
+		_smint.addClass('smint')
 
 		if ( settings.scrollSpeed ) {
 			var scrollSpeed = settings.scrollSpeed
@@ -24,7 +25,7 @@
 			if (!href) {
 				return false
 			}
-			var id = href.split('#')[1];
+			var id = href.split('#')[1]
 
 			if (!id) {
 				return false
@@ -51,7 +52,11 @@
 				var goTo =  $(mySelector+'.'+ item.id).offset().top-menuHeight;
 
 				// Scroll the page to the desired position!
-				$("html, body").stop().animate({ scrollTop: goTo }, scrollSpeed);
+				if (scrollSpeed) {
+					$("html, body").stop().animate({ scrollTop: goTo }, scrollSpeed);
+				} else {
+					$("html, body").scrollTop(goTo)
+				}
 
 				// if the link has the '.extLink' class it will be ignored
 				if (_item.hasClass("extLink")) {
@@ -89,12 +94,12 @@
 			var hash = $(this).attr('href').split('#')[1];
 
 			if (_smint.hasClass('fxd')) {
-				var goTo =  $(mySelector+'.'+ hash).position().top-menuHeight;
+				var goTo =  $(mySelector+'.'+ hash).position().top-menuHeight
 			} else {
-				var goTo =  $(mySelector+'.'+ hash).position().top-menuHeight*2;
+				var goTo =  $(mySelector+'.'+ hash).position().top-menuHeight*2
 			}
 
-			$("html, body").stop().animate({ scrollTop: goTo }, scrollSpeed);
+			$("html, body").stop().animate({ scrollTop: goTo }, scrollSpeed)
 
 			if ($(this).hasClass("extLink")) {
 				return false;
@@ -109,5 +114,5 @@
 		return $(this)
 	};
 
-	$.fn.smint.defaults = { 'scrollSpeed': 500, 'mySelector': 'div'};
-})(jQuery);
+	$.fn.smint.defaults = defaultOption
+})(jQuery)
