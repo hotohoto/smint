@@ -1,7 +1,7 @@
 (function(){
 	var defaultOption = {
 		'scrollSpeed': 500,
-		'mySelector': 'div'
+		'targetSelector': 'div'
 	}
 	$.fn.smint = function( options ) {
 		var settings = $.extend(defaultOption, options)
@@ -15,8 +15,8 @@
 			var scrollSpeed = settings.scrollSpeed
 		}
 
-		if ( settings.mySelector ) {
-			var mySelector = settings.mySelector
+		if ( settings.targetSelector ) {
+			var targetSelector = settings.targetSelector
 		};
 
 		var smintA = $('.smint a').filter( function() {
@@ -31,15 +31,12 @@
 				return false
 			}
 
-			if (!_item.hasClass("extLink")) {
-				_item.attr('id', id)
-			}
-
 			//Fill the menu
 			var item = {
-				id: id,
-				pos1: $(mySelector+"."+id).position().top-menuHeight,
-				pos2: $(mySelector+"."+id).height()+$(mySelector+"."+id).position().top
+				sel: _item,
+				targetId: id,
+				pos1: $(targetSelector+"#"+id).position().top-menuHeight,
+				pos2: $(targetSelector+"#"+id).height()+$(targetSelector+"#"+id).position().top
 			}
 			menuItems.push(item)
 
@@ -49,7 +46,7 @@
 				// stops hrefs making the page jump when clicked
 				e.preventDefault();
 
-				var goTo =  $(mySelector+'.'+ item.id).offset().top-menuHeight;
+				var goTo =  $(targetSelector+'#'+ item.targetId).offset().top-menuHeight;
 
 				// Scroll the page to the desired position!
 				if (scrollSpeed) {
@@ -73,11 +70,11 @@
 
 			menuItems.map(function (item, index) {
 				if(item.pos1 <= scrollTop && scrollTop <= item.pos2){
-					$("#"+item.id).addClass("active");
+					item.sel.addClass("active");
 
 					$.each(menuItems, function(i){
-						if(item.id != menuItems[i].id){
-							$("#"+menuItems[i].id).removeClass("active");
+						if(item.targetId != menuItems[i].targetId){
+							menuItems[i].sel.removeClass("active");
 						}
 					});
 				}
@@ -94,9 +91,9 @@
 			var hash = $(this).attr('href').split('#')[1];
 
 			if (_smint.hasClass('fxd')) {
-				var goTo =  $(mySelector+'.'+ hash).position().top-menuHeight
+				var goTo =  $(targetSelector+'#'+ hash).position().top-menuHeight
 			} else {
-				var goTo =  $(mySelector+'.'+ hash).position().top-menuHeight*2
+				var goTo =  $(targetSelector+'#'+ hash).position().top-menuHeight*2
 			}
 
 			$("html, body").stop().animate({ scrollTop: goTo }, scrollSpeed)
